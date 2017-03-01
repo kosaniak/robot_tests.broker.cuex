@@ -7,8 +7,14 @@ import os
 import urllib
 
 
+def get_library():
+    return BuiltIn().get_library_instance('Selenium2Library')
+
 def convert_date_to_dash_format(date):
     return datetime.strptime(date,'%d.%m.%Y').strftime('%Y-%m-%d')
+
+def get_webdriver_instance():
+    return get_library()._current_browser()
 
 def get_cur_date():
     dnow = datetime.now()
@@ -18,6 +24,9 @@ def convert_datetime_for_delivery(isodate):
     iso_dt = parse_date(isodate)
     date_string = iso_dt.strftime("%Y-%m-%d %H:%M")
     return date_string
+
+def concat(val1,val2):
+    return val1+val2
 
 def create_question_id(field,prefix):
     return 'q_'+field+ '_' + prefix
@@ -94,7 +103,13 @@ def convert_cuex_string_to_common_string(string):
             u"Паспорт торгів" : u"tenderNotice",
             u"Юридична Інформація Майданчиків" : u"x_dgfPlatformLegalDetails",
             u'Порядку ознайомлення з активом у кімнаті даних' : u'x_dgfAssetFamiliarization',
-            u"Порядку ознайомлення з майном" : u'x_dgfAssetFamiliarization'
+            u"Порядку ознайомлення з майном" : u'x_dgfAssetFamiliarization',
+            u"Очікується кінець кваліфікації" : u"pending.waiting",
+            u"Очікується протокол" : u"pending.verification",
+            u"Очікується оплата" : u"pending.payment",
+            u"Кандидат забрав гарантійний внесок" : u"cancelled",
+            u"Аукціон неуспішний" : u"unsuccessful",
+            u"Оплачено, очікується підписання договору" : u"active"
     }.get(string, string)
 
 def subtract_from_time(date_time, subtr_min, subtr_sec):
@@ -106,6 +121,9 @@ def subtract_from_time(date_time, subtr_min, subtr_sec):
 def procuring_entity_name(tender_data):
      tender_data.data.procuringEntity['name'] = u"ПАТ \"Прайм-Банк\""
      return tender_data
+
+def join(l, separator):
+    return separator.join(l)
 
 def price_format(val):
     val = val.replace(' ','').replace(',','.')
